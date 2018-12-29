@@ -69,3 +69,5 @@ class M4Conan(ConanFile):
 
     def package_info(self):
         self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+        m4 = "m4.exe" if self.settings.os_build == "Windows" else "m4"
+        self.env_info.M4 = os.path.join(self.package_folder, "bin", m4)
