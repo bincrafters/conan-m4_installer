@@ -40,10 +40,7 @@ class M4Conan(ConanFile):
         tools.patch(patch_file="msvc.patch", base_path=self._source_subfolder)
 
     def build(self):
-        if self._is_msvc:
-            with tools.vcvars(self.settings):
-                self._build_configure()
-        else:
+        with tools.vcvars(self.settings) if self._is_msvc else tools.no_op():
             self._build_configure()
 
     def _build_configure(self):
