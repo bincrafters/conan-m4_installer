@@ -13,6 +13,3 @@ class TestPackageConan(ConanFile):
         self.run("m4 --version")
         self.run("m4 -P %s" % test_file)
         self.run("m4 -P %s > out" % test_file)
-
-        if "\r\n" in open("out", "rb").read().decode():
-            raise Exception("m4 output has DOS line-endings!")
