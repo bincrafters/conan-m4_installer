@@ -21,15 +21,11 @@ class M4Conan(ConanFile):
     _build_subfolder = "build_subfolder"
 
     @property
-    def _is_msvc(self):
-        return self.settings.compiler == "Visual Studio"
-
-    @property
     def _is_mingw_windows(self):
         return self.settings.os_build == "Windows" and self.settings.compiler == "gcc" and os.name == "nt"
 
     def build_requirements(self):
-        if self._is_msvc or self._is_mingw_windows:
+        if self._is_mingw_windows:
             self.build_requires("msys2_installer/latest@bincrafters/stable")
 
     def source(self):
@@ -37,25 +33,11 @@ class M4Conan(ConanFile):
         tools.get(source_url, sha256="6640d76b043bc658139c8903e293d5978309bf0f408107146505eca701e67cf6")
         os.rename("m4-" + self.version, self._source_subfolder)
         tools.patch(patch_file="secure_snprintf.patch", base_path=self._source_subfolder)
-        tools.patch(patch_file="msvc.patch", base_path=self._source_subfolder)
 
     def build(self):
-        with tools.vcvars(self.settings) if self._is_msvc else tools.no_op():
-            self._build_configure()
-
-    def _build_configure(self):
         with tools.chdir(self._source_subfolder):
-            args = []
-            if self._is_msvc:
-                args.extend(['CC=$PWD/build-aux/compile cl -nologo',
-                             'CXX=$PWD/build-aux/compile cl -nologo',
-                             'LD=link',
-                             'NM=dumpbin -symbols',
-                             'STRIP=:',
-                             'AR=$PWD/build-aux/ar-lib lib',
-                             'RANLIB=:'])
-            env_build = AutoToolsBuildEnvironment(self, win_bash=self._is_msvc or self._is_mingw_windows)
-            env_build.configure(args=args)
+            env_build = AutoToolsBuildEnvironment(self, win_bash=self._is_mingw_windows)
+            env_build.configure()
             env_build.make()
             env_build.install()
 
