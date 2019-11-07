@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 from conans import ConanFile, tools, AutoToolsBuildEnvironment
 import os
 
@@ -12,7 +9,6 @@ class M4Conan(ConanFile):
     topics = ("conan", "m4", "macro", "macro processor")
     url = "https://github.com/bincrafters/conan-m4_installer"
     homepage = "https://www.gnu.org/software/m4/"
-    author = "Bincrafters <bincrafters@gmail.com>"
     license = "GPL-3.0-only"
     exports = ["LICENSE.md"]
     exports_sources = ["secure_snprintf.patch", "msvc.patch"]
@@ -26,7 +22,7 @@ class M4Conan(ConanFile):
 
     def build_requirements(self):
         if self._is_mingw_windows:
-            self.build_requires("msys2_installer/latest@bincrafters/stable")
+            self.build_requires("msys2/20161025")
 
     def source(self):
         source_url = "http://ftp.gnu.org/gnu/m4/m4-%s.tar.bz2" % self.version
