@@ -22,7 +22,7 @@ class M4Conan(ConanFile):
 
     def build_requirements(self):
         if self._is_mingw_windows:
-            self.build_requires("msys2/20161025")
+            self.build_requires("msys2/20190524")
 
     def source(self):
         source_url = "http://ftp.gnu.org/gnu/m4/m4-%s.tar.bz2" % self.version
